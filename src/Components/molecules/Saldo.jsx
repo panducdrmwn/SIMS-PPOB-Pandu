@@ -1,6 +1,4 @@
 import { useState } from "react";
-import show from "../../assets/eye-show.svg";
-import hide from "../../assets/eye-crossed.svg";
 
 export default function Saldo(balance) {
   const [balanceHidden, setBalanceHidden] = useState(true);
