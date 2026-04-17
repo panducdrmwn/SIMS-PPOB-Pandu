@@ -14,6 +14,11 @@ export default function Home() {
   const [banners, setBanners] = useState([]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    
     if (isAuthenticated && token) {
       // Fetch services
       axios
@@ -46,11 +51,8 @@ export default function Home() {
     const serviceNameSlug = service.service_name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/purchase/${serviceNameSlug}`);
   };
-
-  if (!isAuthenticated) {
-    navigate("/login");
-  }
-
+ 
+  
   return (
     <div className="min-h-screen max-w-[80%] mx-auto">
       {/* profil dan saldo */}

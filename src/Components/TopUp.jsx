@@ -8,24 +8,38 @@ import { useModal } from "../contexts/ModalContext";
 import logo from "../assets/Logo.png";
 import check from "../assets/check.png";
 import cross from "../assets/cross.png";
-import { setBalance, setBalanceLoading, setBalanceError, updateBalance } from "../features/balanceSlice";
+import {
+  setBalance,
+  setBalanceLoading,
+  setBalanceError,
+  updateBalance,
+} from "../features/balanceSlice";
+import { useNavigate } from "react-router-dom";
 
 const presetAmounts = [10000, 20000, 50000, 100000, 250000, 500000];
 
 export default function TopUp() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, token } = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user.profile);
-  const { balance, loading: balanceLoading } = useSelector((state) => state.balance);
+  const { balance, loading: balanceLoading } = useSelector(
+    (state) => state.balance,
+  );
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const { openModal, closeModal } = useModal();
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
     if (isAuthenticated && token) {
       dispatch(setBalanceLoading(true));
       // fetch balance
-      axios.get("https://take-home-test-api.nutech-integrasi.com/balance", {
+      axios
+        .get("https://take-home-test-api.nutech-integrasi.com/balance", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -201,16 +215,6 @@ export default function TopUp() {
       setLoading(false);
     }
   };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg">Please login to top up your balance.</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen max-w-[80%] mx-auto">

@@ -12,6 +12,11 @@ export default function Account() {
   const navigate = useNavigate()
   const user = useSelector(state => state.user.profile)
   const token = useSelector(state => state.auth.token)
+  const { isAuthenticated } = useSelector(state => state.auth)
+
+  if (!isAuthenticated) {
+    navigate("/login");
+  }
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     first_name: user?.first_name || '',
