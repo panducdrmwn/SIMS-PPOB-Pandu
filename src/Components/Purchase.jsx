@@ -5,7 +5,7 @@ import axios from "axios";
 import Welcome from "./molecules/Welcome";
 import Saldo from "./molecules/Saldo";
 import { useModal } from "../contexts/ModalContext";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import check from "../assets/check.png";
 import cross from "../assets/cross.png";
 import { updateBalance } from "../features/balanceSlice";
