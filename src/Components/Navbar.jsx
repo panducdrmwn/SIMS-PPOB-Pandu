@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { clearUser } from '../features/userSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../assets/logo.png'
+import logo from '../assets/Logo.png'
 
 export default function Navbar() {
   const { isAuthenticated } = useSelector(state => state.auth);
