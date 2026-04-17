@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import Saldo from "./molecules/Saldo";
 import Welcome from "./molecules/Welcome";
 import { useModal } from "../contexts/ModalContext";
-import logo from "../assets/logo.png";
+import logo from "../assets/Logo.png";
 import check from "../assets/check.png";
 import cross from "../assets/cross.png";
 import { setBalance, setBalanceLoading, setBalanceError, updateBalance } from "../features/balanceSlice";
