@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../features/authSlice";
-import { setUser } from "../features/userSlice";
+import { setUser, fetchProfile } from "../features/userSlice";
 import loginIllustration from "../assets/Illustrasi Login.png";
 import logo from "../assets/Logo.png";
 
@@ -51,21 +51,12 @@ export default function Login() {
         const token = response.data.data.token;
         dispatch(loginSuccess(token));
 
-        const profileResponse = await axios.get(
-          "https://take-home-test-api.nutech-integrasi.com/profile",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-
-        if (profileResponse.data.status === 0) {
-          dispatch(setUser(profileResponse.data.data));
-        }
+        await dispatch(fetchProfile(token)).unwrap();
 
         toast.success(response.data.message, {
-        position: "bottom-left",
-        className: "bg-green-500 text-white w-full",
-      });
+          position: "bottom-left",
+          className: "bg-green-500 text-white w-full",
+        });
         navigate("/");
       } else {
         toast.error(error.response.data.message, {

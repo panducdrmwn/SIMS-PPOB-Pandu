@@ -11,9 +11,8 @@ import Navbar from './Components/Navbar';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './features/authSlice';
-import { setUser } from './features/userSlice';
-import { setBalance, setBalanceLoading, setBalanceError } from './features/balanceSlice';
-import axios from 'axios';
+import { setUser, fetchProfile } from './features/userSlice';
+import { fetchBalance } from './features/balanceSlice';
 
 
 function App() {
@@ -21,42 +20,24 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+   
     if (token) {
-      axios.get('https://take-home-test-api.nutech-integrasi.com/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }).then(response => {
-        if (response.data.status === 0) {
+      dispatch(fetchProfile(token))
+        .unwrap()
+        .then(() => {
           dispatch(loginSuccess(token));
-          dispatch(setUser(response.data.data));
-
-          // Fetch balance
-          dispatch(setBalanceLoading(true));
-          axios.get('https://take-home-test-api.nutech-integrasi.com/balance', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }).then(balanceResponse => {
-            if (balanceResponse.data.status === 0) {
-              dispatch(setBalance(balanceResponse.data.data.balance));
-            } else {
-              dispatch(setBalanceError('Failed to fetch balance'));
-            }
-          }).catch(error => {
-            dispatch(setBalanceError(error.message));
-          }).finally(() => {
-            dispatch(setBalanceLoading(false));
-          });
-        }
-      }).catch(() => {
-        localStorage.removeItem('token');
-      });
+          dispatch(fetchBalance(token));
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+        });
     }
   }, [dispatch]);
 
   return (
-    <>    <Navbar />    <Toaster position='top-center' toastOptions={{duration: 3000}}/>
+    <>   
+     <Navbar />   
+     <Toaster position='top-center' toastOptions={{duration: 3000}}/>
      <Routes>
        <Route path='/' element={<Home/>} />
        <Route path='/login' element={<Login/>} />

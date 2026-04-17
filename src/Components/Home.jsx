@@ -1,53 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Welcome from "./molecules/Welcome";
 import Saldo from "./molecules/Saldo";
+import { fetchServices, fetchBanners } from "../features/homeSlice";
 
 export default function Home() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { isAuthenticated, token } = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user.profile);
   const { balance } = useSelector((state) => state.balance);
-  const [services, setServices] = useState([]);
-  const [banners, setBanners] = useState([]);
+  const { services, banners } = useSelector((state) => state.home);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
-    
-    if (isAuthenticated && token) {
-      // Fetch services
-      axios
-        .get("https://take-home-test-api.nutech-integrasi.com/services", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          if (res.data.status === 0) {
-            setServices(res.data.data);
-          }
-        })
-        .catch(console.error);
 
-      // Fetch promos
-      axios
-        .get("https://take-home-test-api.nutech-integrasi.com/banner", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          if (res.data.status === 0) {
-            setBanners(res.data.data);
-          }
-        })
-        .catch(console.error);
+    if (isAuthenticated && token) {
+      dispatch(fetchServices(token));
+      dispatch(fetchBanners(token));
     }
-  }, [isAuthenticated, token]);
+  }, [isAuthenticated, token, dispatch, navigate]);
 
   const selectService = (service) => {
-    // Navigate to purchase page 
     const serviceNameSlug = service.service_name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/purchase/${serviceNameSlug}`);
   };

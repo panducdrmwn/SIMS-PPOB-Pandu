@@ -8,7 +8,7 @@ import { useModal } from "../contexts/ModalContext";
 import logo from "../assets/Logo.png";
 import check from "../assets/check.png";
 import cross from "../assets/cross.png";
-import { updateBalance } from "../features/balanceSlice";
+import { updateBalance, fetchBalance } from "../features/balanceSlice";
 
 export default function Purchase() {
   const navigate = useNavigate();
@@ -145,17 +145,8 @@ export default function Purchase() {
           ),
         });
 
-        // Update saldo
-        axios
-          .get("https://take-home-test-api.nutech-integrasi.com/balance", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            if (res.data.status === 0) {
-              dispatch(updateBalance(res.data.data.balance));
-            }
-          })
-          .catch(console.error);
+        // Update balance
+        dispatch(fetchBalance(token));
       } else {
         // Error modal
         openModal({

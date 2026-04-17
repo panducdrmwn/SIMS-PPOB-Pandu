@@ -13,10 +13,6 @@ export default function Account() {
   const user = useSelector((state) => state.user.profile);
   const token = useSelector((state) => state.auth.token);
   const { isAuthenticated } = useSelector((state) => state.auth);
-
-  if (!isAuthenticated) {
-    navigate("/login");
-  }
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     first_name: user?.first_name || "",
@@ -31,6 +27,10 @@ export default function Account() {
       ? defaultProfilePhoto
       : user?.profile_image,
   );
+
+  if (!isAuthenticated) {
+    navigate("/login");
+  }
   const fileInputRef = useRef(null);
 
   const validateForm = () => {
