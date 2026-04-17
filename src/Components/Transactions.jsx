@@ -17,6 +17,20 @@ export default function Transactions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    const time = date.toLocaleTimeString('default', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    return `${day} ${month} ${year} ${time}`;
+  };
+
   const loadTransactions = async (nextOffset) => {
     if (!isAuthenticated || !token) return;
 
@@ -96,7 +110,7 @@ export default function Transactions() {
                       </p>
 
                       <p className="text-sm text-gray-500">
-                        {new Date(tx.created_on || "").toLocaleString()}
+                        {formatDate(tx.created_on)}
                       </p>
                       <p className="text-sm text-gray-600 mt-2"></p>
                     </div>
